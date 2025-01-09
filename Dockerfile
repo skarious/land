@@ -4,13 +4,13 @@ FROM node:20-alpine AS builder
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos de configuración
+# Copiar package.json y package-lock.json
 COPY package*.json ./
 
 # Instalar dependencias
-RUN npm install
+RUN npm ci
 
-# Copiar el código fuente
+# Copiar el resto de los archivos
 COPY . .
 
 # Construir la aplicación
@@ -37,10 +37,6 @@ EXPOSE 80
 
 # Configurar variables de entorno
 ENV NODE_ENV=production
-
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
 
 # Iniciar nginx
 CMD ["nginx", "-g", "daemon off;"]
