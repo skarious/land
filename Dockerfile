@@ -7,20 +7,20 @@ WORKDIR /app
 # Copiar los archivos de configuración
 COPY package*.json ./
 
-# Instalar dependencias con yarn
-RUN yarn install
+# Instalar dependencias
+RUN npm install
 
 # Copiar el código fuente
 COPY . .
 
 # Construir la aplicación
-RUN yarn build
+RUN npm run build
 
 # Etapa de producción
 FROM nginx:stable-alpine
 
 # Copiar la configuración personalizada de nginx
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copiar los archivos de construcción desde la etapa anterior
 COPY --from=builder /app/dist /usr/share/nginx/html
